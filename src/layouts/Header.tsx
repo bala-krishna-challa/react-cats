@@ -1,9 +1,13 @@
-import { Container, Typography } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
+import { Auth } from 'aws-amplify';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { makeStyles } from 'tss-react/mui';
-import logo from './assets/logo';
-import { useEffect, useState } from 'react';
+import logo from '../assets/logo';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles<void, 'title' | 'caption'>()(
   (theme, _params, classes) => ({
@@ -39,8 +43,14 @@ const useStyles = makeStyles<void, 'title' | 'caption'>()(
 );
 
 function Header() {
+  const navigate = useNavigate();
   const [date, setDate] = useState('');
   const { classes } = useStyles();
+
+  const signOut = useCallback(async () => {
+    await Auth.signOut();
+    navigate('/');
+  }, [navigate]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,23 +70,32 @@ function Header() {
         >
           {date}
         </Typography>
-        <Box sx={{ display: 'flex' }}>
-          <Box className={classes.header}>
-            <Box className={classes.logoBox}>
-              <img src={logo.path} alt="Catstronaut" />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex' }}>
+            <Box className={classes.header}>
+              <Box className={classes.logoBox}>
+                <img src={logo.path} alt="Catstronaut" />
+              </Box>
+              <Box>
+                <Typography
+                  className={classes.title}
+                  variant="h4"
+                  component="h1"
+                >
+                  Catstronaut
+                </Typography>
+                <Typography
+                  className={classes.caption}
+                  variant="subtitle2"
+                  component="h6"
+                >
+                  Kitty space academy
+                </Typography>
+              </Box>
             </Box>
-            <Box>
-              <Typography className={classes.title} variant="h4" component="h1">
-                Catstronaut
-              </Typography>
-              <Typography
-                className={classes.caption}
-                variant="subtitle2"
-                component="h6"
-              >
-                Kitty space academy
-              </Typography>
-            </Box>
+          </Box>
+          <Box>
+            <Button onClick={signOut}>Log out</Button>
           </Box>
         </Box>
       </Container>

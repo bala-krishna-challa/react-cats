@@ -6,20 +6,23 @@ import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import theme from './theme';
+
+import { RouterProvider } from 'react-router-dom';
+
+import { Amplify } from 'aws-amplify';
+import awsExports from './aws-exports';
+import router from './routes';
+
+Amplify.configure(awsExports);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
